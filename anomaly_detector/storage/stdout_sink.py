@@ -16,7 +16,7 @@ class StdoutSink(StorageSink):
         if self.config.FACT_STORE_URL:
             for entry in entries:
                 try:
-                    if entry.get('anomaly') is 1:
+                    if entry.get('anomaly') == 1:
                         logging.info("{}?lad_id={}&is_anomaly={}&message={}".format(self.config.FACT_STORE_URL,
                                                                                     entry['predict_id'], "False",
                                                                                     entry['e_message']))
@@ -24,4 +24,9 @@ class StdoutSink(StorageSink):
                     logging.debug(e)
             logging.info("output logs {} in stdout.sink".format(len(entries)))
         else:
-            logging.error("To use stdout.sink you must set FACT_STORE_URL config")
+            for entry in entries:
+                try:
+                    if entry.get("anomaly") == 1:
+                        logging.info(entry['message'])
+                except Exception as e:
+                    logging.debug(e)

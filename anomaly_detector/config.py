@@ -1,7 +1,7 @@
 """Configuration setting class."""
 
 import os
-import distutils
+import setuptools
 import logging
 import yaml
 
@@ -18,6 +18,11 @@ def join_w2v_model_path(config):
     config.W2V_MODEL_PATH = os.path.join(config.MODEL_DIR, config.W2V_MODEL_FILE)
 
 
+def join_lof_model_path(config):
+    """Construct LOF model path"""
+    config.LOF_MODEL_PATH = os.path.join(config.MODEL_DIR, config.LOF_MODEL_FILE)
+
+
 def check_or_create_model_dir(config):
     """Check if model dir exists and create if not."""
     if not os.path.exists(config.MODEL_DIR):
@@ -32,12 +37,20 @@ class Configuration:
     # One of the storage backends available in storage/ dir
     STORAGE_DATASOURCE = "local"
     STORAGE_DATASINK = "local"
+
+    # Process logs from specific host
+    LOGSOURCE_HOSTNAME = "localhost"
+
     # Location of local data
     # A directory where trained models will be stored
+    MODEL_BASE_DIR = "./models/"
     MODEL_DIR = "./models/"
     MODE_DIR_CALLABLE = check_or_create_model_dir
     # Name of the file where SOM model will be stored
     MODEL_FILE = "SOM.model"
+    # LOF model
+    LOF_MODEL_FILE = "LOF.model"
+    LOF_MODEL_PATH_CALLABLE = join_lof_model_path
     # Name of the file where W2V model will be stored
     W2V_MODEL_FILE = "W2V.model"
     MODEL_PATH_CALLABLE = join_model_path
@@ -59,9 +72,10 @@ class Configuration:
     MODEL_STORE = ""
     MODEL_STORE_PATH = "anomaly-detection/models/"
     # Number of seconds specifying how far to the past to go to load log entries for training
-    TRAIN_TIME_SPAN = 900
+    TRAIN_TIME_SPAN = 2592000
     # Maximum number of entries for training loaded from backend storage
-    TRAIN_MAX_ENTRIES = 315448
+    #TRAIN_MAX_ENTRIES = 315448
+    TRAIN_MAX_ENTRIES = 250000
     # Number of SOM training iterations
     TRAIN_ITERATIONS = 315448
     # If true, re-traing the models
@@ -71,7 +85,14 @@ class Configuration:
     # Set the length of the encoded log vectors
     TRAIN_VECTOR_LENGTH = 25
     # number of jobs to use to parallelize the training, should match cpu resource limit
-    PARALLELISM = 2
+    PARALLELISM = 1
+
+    # LOF
+    LOF_MODEL_STORE = ""
+    LOF_MODEL_STORE_PATH = "anomaly-detection/models"
+
+    LOF_NEIGHBORS = 100
+    LOF_METRIC = "euclidean"
 
     # Threshold used to decide whether an entry is an anomaly
     INFER_ANOMALY_THRESHOLD = 3.1
@@ -118,20 +139,77 @@ class Configuration:
     OS_NAMESPACE = os.getenv("OPENSHIFT_BUILD_NAMESPACE", "localhost")
     prefix = "LAD"
 
-    def __init__(self, prefix=None, config_yaml=None):
+    # MongoDB config
+    MG_USE_SSL = False
+    MG_CA_CERT = ""
+    MG_VERIFY_CERT = False
+    MG_HOST = 'localhost'
+    MG_PORT = 27017
+    MG_USER = ""
+    MG_PASSWORD = ""
+    MG_DB = ""
+    MG_COLLECTION = ""
+    MG_INPUT_DB = ""
+    MG_INPUT_COL = ""
+    MG_TARGET_DB = ""
+    MG_TARGET_COL = ""
+
+    # MySQL config
+    MYSQL_INPUT_HOST = "localhost"
+    MYSQL_INPUT_PORT = 3306
+    MYSQL_INPUT_DB = ""
+    MYSQL_INPUT_TABLE = ""
+    MYSQL_TARGET_HOST = "localhost"
+    MYSQL_TARGET_PORT = 3306
+    MYSQL_TARGET_DB = ""
+    MYSQL_TARGET_TABLE = ""
+    MYSQL_INPUT_USER = ""
+    MYSQL_INPUT_PASSWORD = ""
+    MYSQL_TARGET_USER = ""
+    MYSQL_TARGET_PASSWORD = ""
+
+    HOSTNAME_INDEX = ""
+    DATETIME_INDEX = ""
+    MESSAGE_INDEX = ""
+
+    # Aggregation
+    AGGR_TIME_SPAN = 86400
+    AGGR_MAX_ENTRIES = 315448
+    AGGR_VECTOR_LENGTH = 25
+    AGGR_WINDOW = 5
+    AGGR_EPS = 0.5
+    AGGR_MIN_SAMPLES = 5
+
+    def __init__(self, prefix=None, config_yaml=None, config_dict=None):
         """Initialize configuration."""
         # For backward compatibility
         self.load_from_env()
-        if config_yaml is not None:
+        if config_yaml:   # is not None
             with open(config_yaml) as f:
                 yaml_data = yaml.load(f, Loader=yaml.FullLoader)
+                if "LOGSOURCE_HOSTNAME" in yaml_data.keys():
+                    self.set_property("MODEL_DIR",
+                                      self.MODEL_BASE_DIR + yaml_data["LOGSOURCE_HOSTNAME"] + "/")
                 for prop in self.__class__.__dict__.keys():
                     attr = getattr(self, prop)
                     if prop.isupper() and prop.endswith("_CALLABLE") and callable(attr):
                         attr()
                     elif prop.isupper() and prop in list(yaml_data.keys()):
                         self.set_property(prop, yaml_data[prop])
-                        # self.__setattr__(prop, yaml_data[prop])
+            check_or_create_model_dir(self)
+        elif config_dict:   # is not None
+            if "MODEL_BASE_DIR" in config_dict.keys():
+                self.set_property("MODEL_BASE_DIR", config_dict["MODEL_BASE_DIR"])
+            if "LOGSOURCE_HOSTNAME" in config_dict.keys():
+                self.set_property("MODEL_DIR",
+                                  self.MODEL_BASE_DIR + config_dict["LOGSOURCE_HOSTNAME"] + "/")
+            for prop in self.__class__.__dict__.keys():
+                attr = getattr(self, prop)
+                if prop.isupper() and prop.endswith("_CALLABLE") and callable(attr):
+                    attr()
+                elif prop.isupper() and prop in list(config_dict.keys()):
+                    self.set_property(prop, config_dict[prop])
+            check_or_create_model_dir(self)
         else:
             self.storage = None
             if prefix:
@@ -172,6 +250,6 @@ class Configuration:
                 if type(val) is bool:
                     setattr(self, prop, val)
                 else:
-                    setattr(self, prop, bool(distutils.util.strtobool(val)))
+                    setattr(self, prop, bool(setuptools.distutils.util.strtobool(val)))
             else:
                 raise Exception("Incorrect type for %s (%s) loaded " % (prop, typ))

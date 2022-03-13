@@ -1,0 +1,30 @@
+STORAGE_DATASOURCE: "mg"
+STORAGE_DATASINK: mg
+MG_HOST: 172.17.18.83
+MG_PORT: 27017
+MG_USER: dbadmin
+MG_PASSWORD: password123
+MG_CA_CERT: "/home/nadzya/Apps/log-anomaly-detector/config_files/LAD_CA.crt"
+MG_VERIFY_CERT: true
+MG_DB: fluentdb
+LOG_SOURCES:
+  #"network_logs":
+  #  HOSTNAMES:
+  #    - "kvm1.lab.solidex.by"
+      #- "kvm2.lab.solidex.by"
+  "web_logs":
+    HOSTNAMES:
+      - "195-137-160-145.hoster.by"
+      - "data.solidex.by"
+    #"utm_logs":
+    #HOSTNAMES:
+    #  - "172.17.31.10"
+    #MG_TARGET_COL: "utm_anomaly"
+TRAIN_MAX_ENTRIES: 100000
+INFER_MAX_ENTRIES: 100000
+DATETIME_INDEX: "received_at"
+HOSTNAME_INDEX: "hostname"
+MESSAGE_INDEX: "message"
+TRAIN_TIME_SPAN: 2592000
+INFER_TIME_SPAN: 2592000
+PARALLELISM: 1

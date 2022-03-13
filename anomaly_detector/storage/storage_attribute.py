@@ -48,3 +48,59 @@ class ESStorageAttribute(DefaultStorageAttribute):
     def number_of_entries(self, x):
         """Time range for query and max number of entries."""
         self.__number_of_entries = x
+
+
+class MGStorageAttribute(DefaultStorageAttribute):
+    """MongoDB Attributes require false positive data and time_range and number of entries to pull"""
+
+    def __init__(self, time_range: int, number_of_entries: int, false_data=None):
+        self.__time_range = time_range
+        self.__number_of_entries = number_of_entries
+        self.false_data = false_data
+
+    @property
+    def time_range(self):
+        """Time range for query."""
+        return self.__time_range
+
+    @time_range.setter
+    def time_range(self, x):
+        """Time range for query."""
+        self.__time_range = x
+
+    @property
+    def number_of_entries(self):
+        """Max number of entries for query."""
+        return self.__number_of_entries
+
+    @number_of_entries.setter
+    def number_of_entries(self, x):
+        """Time range for query and max number of entries."""
+        self.__number_of_entries = x
+
+class MySQLStorageAttribute(DefaultStorageAttribute):
+    """MySQL Attributes"""
+
+    def __init__(self, time_range: int, number_of_entries: int):
+        self.__time_range = time_range
+        self.__number_of_entries = number_of_entries
+
+    @property
+    def time_range(self):
+        """Time range for query."""
+        return self.__time_range
+
+    @time_range.setter
+    def time_range(self, x):
+        """Time range for query."""
+        self.__time_range = x
+
+    @property
+    def number_of_entries(self):
+        """Max number of entries for query."""
+        return self.__number_of_entries
+
+    @number_of_entries.setter
+    def number_of_entries(self, x):
+        """Time range for query and max number of entries."""
+        self.__number_of_entries = x
