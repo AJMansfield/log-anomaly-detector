@@ -11,7 +11,7 @@ REQUIRED_PKG = [
     "matplotlib",
     "Cython==0.29.24",
     "tensorflow==2.7.0",
-    "numpy==1.21.4",
+    "numpy",
     "pandas==1.3.3",
     "prometheus_client",
     "Flask==1.0.4",
@@ -34,6 +34,7 @@ REQUIRED_PKG = [
     "tornado==5.1.1",
     "pymongo==3.12.1",
     "mysql-connector-python==8.0.27",
+    "protobuf<=3.20",
 ]
 
 setup(
