@@ -115,6 +115,12 @@ class Configuration:
     LS_OUTPUT_RWA_MODE = "w"
     # ElasticSearch endpoint URL
     ES_ENDPOINT = ""
+    # ElasticSearch http auth username (if not included in endpoint url)
+    ES_USER = ""
+    # ElasticSearch http auth password (if not included in endpoint url)
+    ES_PASSWORD = ""
+    # ElasticSearch ca.tls file path
+    ES_CA_PATH = "/etc/elastic/elasticsearch/certs/ca.crt"
     # Path to a directory where cert and key (es.crt and es.key) are stored for authentication
     ES_CERT_DIR = ""
     # If True, connect using ssl
