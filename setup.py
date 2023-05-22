@@ -18,7 +18,7 @@ REQUIRED_PKG = [
     "tqdm",
     "SQLAlchemy",
     "PyMySQL",
-    "sompy",
+    "sompy @ git+https://github.com/sevamoo/SOMPY.git@76b60ebd6ffd550b0f7faaf632451dfd68827bf7#egg=sompy",
     "pyyaml",
     "boto3",
     "pyyaml",
