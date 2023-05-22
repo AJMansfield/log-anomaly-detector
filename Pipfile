@@ -41,6 +41,7 @@ cryptography = "*"
 prometheus_flask_exporter = "*"
 gunicorn = "*"
 requests = "*"
+joblib = "*"
 
 [requires]
 python_version = "3.6"
