@@ -28,6 +28,7 @@ REQUIRED_PKG = [
     "opentracing_instrumentation",
     "prometheus_flask_exporter",
     "requests",
+    "joblib",
 ]
 
 setup(
