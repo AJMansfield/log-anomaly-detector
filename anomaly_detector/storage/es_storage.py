@@ -27,7 +27,14 @@ class ESStorage:
         self._connect()
 
     def _connect(self):
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+#         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        
+        es_args = {}
+        if self.config.ES_USER or self.config.ES_PASSWORD:
+            es_args["http_auth"] = (self.config.ES_USER, self.config.ES_PASSWORD)
+        if len(self.config.ES_CA_PATH) and os.path.isfile(self.config.ES_CA_PATH):
+            es_args["ca_certs"] = self.config.ES_CA_PATH
+            
         if len(self.config.ES_CERT_DIR) and os.path.isdir(self.config.ES_CERT_DIR):
             _LOGGER.warning(
                 "Using cert and key in %s for connection to %s (verify_certs=%s)."
@@ -37,24 +44,19 @@ class ESStorage:
                     self.config.ES_VERIFY_CERTS,
                 )
             )
-            self.es = Elasticsearch(
-                self.config.ES_ENDPOINT,
-                use_ssl=self.config.ES_USE_SSL,
-                verify_certs=self.config.ES_VERIFY_CERTS,
-                client_cert=os.path.join(self.config.ES_CERT_DIR, "es.crt"),
-                client_key=os.path.join(self.config.ES_CERT_DIR, "es.key"),
-                timeout=60,
-                max_retries=2,
-            )
+            es_args["client_cert"] = os.path.join(self.config.ES_CERT_DIR, "es.crt")
+            es_args["client_key"] = os.path.join(self.config.ES_CERT_DIR, "es.key")
         else:
             _LOGGER.warning("Conecting to ElasticSearch without authentication.")
-            self.es = Elasticsearch(
-                self.config.ES_ENDPOINT,
-                use_ssl=self.config.ES_USE_SSL,
-                verify_certs=self.config.ES_VERIFY_CERTS,
-                timeout=60,
-                max_retries=2,
-            )
+           
+        self.es = Elasticsearch(
+            self.config.ES_ENDPOINT,
+            use_ssl=self.config.ES_USE_SSL,
+            verify_certs=self.config.ES_VERIFY_CERTS,
+            timeout=60,
+            max_retries=2,
+            **es_args,
+        )
 
     def _prep_index_name(self, prefix):
         # appends the correct date to the index prefix
