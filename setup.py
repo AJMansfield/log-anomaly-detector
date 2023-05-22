@@ -18,7 +18,7 @@ REQUIRED_PKG = [
     "tqdm",
     "SQLAlchemy",
     "PyMySQL",
-    "sompy @ git+https://github.com/sevamoo/SOMPY.git@76b60ebd6ffd550b0f7faaf632451dfd68827bf7#egg=sompy",
+    "sompy @ git+https://github.com/sevamoo/SOMPY.git",
     "pyyaml",
     "boto3",
     "pyyaml",
@@ -55,7 +55,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     dependency_links=[
-	"git+https://github.com/sevamoo/SOMPY.git@76b60ebd6ffd550b0f7faaf632451dfd68827bf7#egg=sompy",
+	"git+https://github.com/sevamoo/SOMPY.git",
     ],
     install_requires=REQUIRED_PKG,
     entry_points="""

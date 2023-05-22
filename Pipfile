@@ -26,7 +26,7 @@ scikit-learn = "*"
 scipy = "*"
 tqdm = "*"
 prometheus-client = "*"
-sompy = {git = "https://github.com/sevamoo/SOMPY.git",ref = "76b60ebd6ffd550b0f7faaf632451dfd68827bf7"}
+sompy = {git = "https://github.com/sevamoo/SOMPY.git"}
 boto3 = "*"
 Flask = "*"
 Click = "*"
