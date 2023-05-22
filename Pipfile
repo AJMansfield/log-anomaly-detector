@@ -40,6 +40,7 @@ opentracing_instrumentation = "*"
 cryptography = "*"
 prometheus_flask_exporter = "*"
 gunicorn = "*"
+requests = "*"
 
 [requires]
 python_version = "3.6"
