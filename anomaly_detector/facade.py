@@ -33,8 +33,8 @@ class Facade:
         :param service: service name to use for tracing this application.
         :return: Tracer(opentracing.Tracer)
         """
-        logging.getLogger('').handlers = []
-        logging.basicConfig(format='%(message)s', level=logging.DEBUG)
+        # logging.getLogger('').handlers = []
+        logging.basicConfig(level=logging.INFO)
         config = Config(
             config={
                 'sampler': {
