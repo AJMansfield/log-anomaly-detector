@@ -131,6 +131,8 @@ class Configuration:
     ES_TARGET_INDEX = ""
     # ElasticSearch index name where log entries will be pulled from
     ES_INPUT_INDEX = ""
+    # ElasticSearch wildcarded indices to query (will not be tweaked like ES_INPUT_INDEX)
+    ES_INPUT_INDEX_RAW = ""
     # JSON representing a query passed to data source to match the data
     LOG_FORMATTER = ""
     # When customer has custom log format. We will need to perform custom processing.

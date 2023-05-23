@@ -97,7 +97,10 @@ class ElasticSearchDataSource(StorageSource, DataCleaner, ESStorage):
 
     def retrieve(self, storage_attribute: ESStorageAttribute):
         """Retrieve data from ES."""
-        index_in = self._prep_index_name(self.config.ES_INPUT_INDEX)
+        if self.config.ES_INPUT_INDEX_RAW:
+            index_in = self.config.ES_INPUT_INDEX_RAW
+        else:
+            index_in = self._prep_index_name(self.config.ES_INPUT_INDEX)
 
         query = {
             "sort": {"@timestamp": {"order": "desc"}},

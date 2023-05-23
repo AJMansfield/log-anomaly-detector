@@ -98,6 +98,7 @@ class W2VModel(BaseModel):
         return np.array(new_data, ndmin=2)
         """
         vectors = self.get_vectors(new_D)
-        if len(new_D) == 1:
-            return self._log_words_to_one_vector(vectors[0])
+        ## TODO why was this even here in the first place? It makes it less predictable.
+        # if len(new_D) == 1:
+        #     return self._log_words_to_one_vector(vectors[0])
         return self._vectorized_logs_to_single_vectors(vectors)
