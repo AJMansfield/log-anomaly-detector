@@ -48,7 +48,10 @@ class ESStorage:
             es_args["client_key"] = os.path.join(self.config.ES_CERT_DIR, "es.key")
         else:
             _LOGGER.warning("Conecting to ElasticSearch without authentication.")
-           
+        
+        import pdb
+        pdb.set_trace()
+
         self.es = Elasticsearch(
             self.config.ES_ENDPOINT,
             use_ssl=self.config.ES_USE_SSL,
