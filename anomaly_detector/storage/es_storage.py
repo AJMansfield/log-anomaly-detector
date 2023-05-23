@@ -131,6 +131,11 @@ class ElasticSearchDataSource(StorageSource, DataCleaner, ESStorage):
         es_data = [x["_source"] for x in es_data["hits"]["hits"]]
         self.format_log(self.config, es_data)
 
+        # most of the log formats at play don't have a message parameter
+        for data_line in es_data:
+            if "message" not in data_line:
+                data_line["message"] = json.dumps(data_line)
+
         es_data_normalized = pandas.DataFrame(json_normalize(es_data)["message"])
 
         _LOGGER.info("%d logs loaded in from last %d seconds", len(es_data_normalized), storage_attribute.time_range)
