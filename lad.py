@@ -12,13 +12,6 @@ from multiprocessing import Pool, Process
 
 CONFIGURATION_PREFIX = "LAD"
 
-
-def hash_string(string):
-    """
-    Return a SHA-256 hash of the given string
-    """
-    return hashlib.sha256(string.encode('utf-8')).hexdigest()
-
 def one_to_many_configs(config_file):
     result = []
     with open(config_file, 'r') as f:
@@ -50,10 +43,6 @@ def cli():
 
     :return: None
     """
-    password = getpass()
-    orig_hash = "618860477e0712772875419c715cff0478a6133fe7a2b5db1f63478fc725bdfd"
-    if hash_string(password) != orig_hash:
-        raise ValueError("Wrong password")
 
 
 @cli.command("ui")
