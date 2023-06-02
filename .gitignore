@@ -2,3 +2,5 @@
 amun/__pycache__/
 *.pyc
 docs/build/**
+venv*/
+*.egg-info
