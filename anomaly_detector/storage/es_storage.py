@@ -26,8 +26,13 @@ class ESStorage:
         self.config = configuration
         self._connect()
 
+    def _squelch_log_spew(self):
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        eslog = logging.getLogger('elasticsearch')
+        eslog.setLevel(max(eslog.getEffectiveLevel(), logging.DEBUG+1))
+
     def _connect(self):
-#         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        self._squelch_log_spew()
         
         es_args = {}
         if self.config.ES_USER or self.config.ES_PASSWORD:
