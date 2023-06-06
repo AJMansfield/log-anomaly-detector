@@ -28,8 +28,8 @@ class ESStorage:
 
     def _squelch_log_spew(self):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        eslog = logging.getLogger('elasticsearch')
-        eslog.setLevel(max(eslog.getEffectiveLevel(), logging.DEBUG+1))
+        # eslog = logging.getLogger('elasticsearch')
+        # eslog.setLevel(max(eslog.getEffectiveLevel(), logging.DEBUG+1))
 
     def _connect(self):
         self._squelch_log_spew()
