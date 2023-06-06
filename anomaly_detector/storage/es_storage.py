@@ -85,7 +85,7 @@ class ElasticSearchDataSink(StorageSink, DataCleaner, ESStorage):
         """Store results back to ES."""
         index_out = self._prep_index_name(self.config.ES_TARGET_INDEX)
 
-        actions = [{"_index": index_out, "_type": "log", "_source": data[i]} for i in range(len(data))]
+        actions = [{"_index": index_out, "_source": data[i]} for i in range(len(data))]
 
         helpers.bulk(self.es, actions, chunk_size=int(len(data) / 4) + 1)
 
