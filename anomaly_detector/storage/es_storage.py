@@ -142,7 +142,7 @@ class ElasticSearchDataSource(StorageSource, DataCleaner, ESStorage):
         # most of the log formats at play don't have a message parameter
         for data_line in es_data:
             if "message" not in data_line:
-                data_line["message"] = json.dumps(data_line)
+                data_line["message"] = json.dumps(data_line, sort_keys=True)
 
         es_data_normalized = pandas.DataFrame(json_normalize(es_data)["message"])
 
